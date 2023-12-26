@@ -31,7 +31,7 @@ static const char *ipx_ntop1(const struct ipx_addr *addr, char *str, size_t len)
 	if (len == 0)
 		return str;
 
-	for(i = 7; i >= 0; i--)
+	for (i = 7; i >= 0; i--)
 		if (do_digit(str + pos, ntohl(addr->ipx_net), i, &pos, len))
 			return str;
 
@@ -41,7 +41,8 @@ static const char *ipx_ntop1(const struct ipx_addr *addr, char *str, size_t len)
 	*(str + pos) = '.';
 	pos++;
 
-	for(i = 0; i < 6; i++) {
+	for (i = 0; i < 6; i++)
+	{
 		if (do_digit(str + pos, addr->ipx_node[i], 1, &pos, len))
 			return str;
 		if (do_digit(str + pos, addr->ipx_node[i], 0, &pos, len))
@@ -56,15 +57,15 @@ static const char *ipx_ntop1(const struct ipx_addr *addr, char *str, size_t len)
 	return str;
 }
 
-
 const char *ipx_ntop(int af, const void *addr, char *str, size_t len)
 {
-	switch(af) {
-		case AF_IPX:
-			errno = 0;
-			return ipx_ntop1((struct ipx_addr *)addr, str, len);
-		default:
-			errno = EAFNOSUPPORT;
+	switch (af)
+	{
+	case AF_IPX:
+		errno = 0;
+		return ipx_ntop1((struct ipx_addr *)addr, str, len);
+	default:
+		errno = EAFNOSUPPORT;
 	}
 
 	return NULL;

@@ -22,11 +22,12 @@ const {NetworkDiscoveryModule} = NativeModules;
 function App() {
   const [isShowIndicator, setIsShowIndicator] = useState(false);
   const [hostList, setHostList] = useState([]);
+  const [sortData, setSortData] = useState([]);
 
   const onNetworkDiscovery2 = async () => {
     try {
       setIsShowIndicator(true);
-      // setHostList([]);
+      setHostList([]);
       await NetworkDiscoveryModule.getNetworkDiscovery2();
     } catch (e) {
       console.error(e, 'start');
@@ -107,6 +108,27 @@ function App() {
       setHostList(preList => [...preList, res]);
     }
   };
+
+  useEffect(() => {
+    setSortData(hostList.sort(compareIPAddresses));
+  }, [hostList]);
+
+  function compareIPAddresses(a, b) {
+    const numA = Number(
+      a.ip
+        .split('.')
+        .map((num, idx) => num * Math.pow(2, (3 - idx) * 8))
+        .reduce((a, v) => ((a += v), a), 0),
+    );
+    const numB = Number(
+      b.ip
+        .split('.')
+        .map((num, idx) => num * Math.pow(2, (3 - idx) * 8))
+        .reduce((a, v) => ((a += v), a), 0),
+    );
+    return numA - numB;
+  }
+
   const Item = ({item, pos}) => (
     <TouchableOpacity
       activeOpacity={0.5}
@@ -146,7 +168,7 @@ function App() {
 
       <View>
         <FlatList
-          data={hostList}
+          data={sortData}
           renderItem={({item, index}) => <Item item={item} pos={index} />}
           keyExtractor={(item, pos) => pos.toString()}
         />

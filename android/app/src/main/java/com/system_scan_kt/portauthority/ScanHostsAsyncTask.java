@@ -185,7 +185,7 @@ public class ScanHostsAsyncTask extends AsyncTask<Integer, Void, Void> {
                     cleanup(executor, activity, reader);
                     return;
                 }
-//run kar nr pe
+
                 MainAsyncResponse activity1 = delegate.get();
                 InetAddress add;
                 try {

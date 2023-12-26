@@ -7,7 +7,8 @@
 
 static __inline__ u_int16_t dn_ntohs(u_int16_t addr)
 {
-	union {
+	union
+	{
 		u_int8_t byte[2];
 		u_int16_t word;
 	} u;
@@ -23,7 +24,8 @@ static __inline__ int do_digit(char *str, u_int16_t *addr, u_int16_t scale, size
 	if (*pos == len)
 		return 1;
 
-	if (((tmp) > 0) || *started || (scale == 1)) {
+	if (((tmp) > 0) || *started || (scale == 1))
+	{
 		*str = tmp + '0';
 		*started = 1;
 		(*pos)++;
@@ -32,7 +34,6 @@ static __inline__ int do_digit(char *str, u_int16_t *addr, u_int16_t scale, size
 
 	return 0;
 }
-
 
 static const char *dnet_ntop1(const struct dn_naddr *dna, char *str, size_t len)
 {
@@ -85,15 +86,15 @@ static const char *dnet_ntop1(const struct dn_naddr *dna, char *str, size_t len)
 	return str;
 }
 
-
 const char *dnet_ntop(int af, const void *addr, char *str, size_t len)
 {
-	switch(af) {
-		case AF_DECnet:
-			errno = 0;
-			return dnet_ntop1((struct dn_naddr *)addr, str, len);
-		default:
-			errno = EAFNOSUPPORT;
+	switch (af)
+	{
+	case AF_DECnet:
+		errno = 0;
+		return dnet_ntop1((struct dn_naddr *)addr, str, len);
+	default:
+		errno = EAFNOSUPPORT;
 	}
 
 	return NULL;

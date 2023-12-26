@@ -12,7 +12,8 @@ static const char *mpls_ntop1(const struct mpls_label *addr, char *buf, size_t b
 	char *dest = buf;
 	int count = 0;
 
-	while (1) {
+	while (1)
+	{
 		uint32_t entry = ntohl(addr[count++].entry);
 		uint32_t label = (entry & MPLS_LS_LABEL_MASK) >> MPLS_LS_LABEL_SHIFT;
 		int len = snprintf(dest, destlen, "%u", label);
@@ -26,7 +27,8 @@ static const char *mpls_ntop1(const struct mpls_label *addr, char *buf, size_t b
 
 		dest += len;
 		destlen -= len;
-		if (destlen) {
+		if (destlen)
+		{
 			*dest = '/';
 			dest++;
 			destlen--;
@@ -38,7 +40,8 @@ static const char *mpls_ntop1(const struct mpls_label *addr, char *buf, size_t b
 
 const char *mpls_ntop(int af, const void *addr, char *buf, size_t buflen)
 {
-	switch(af) {
+	switch (af)
+	{
 	case AF_MPLS:
 		errno = 0;
 		return mpls_ntop1((struct mpls_label *)addr, buf, buflen);
