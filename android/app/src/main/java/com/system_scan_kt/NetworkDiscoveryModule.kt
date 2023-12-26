@@ -1,9 +1,9 @@
+@file:Suppress("DEPRECATION")
+
 package com.system_scan_kt
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
 import android.content.res.Resources
 import android.net.NetworkInfo
 import android.net.wifi.WifiManager
@@ -13,24 +13,18 @@ import android.os.Handler
 import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.preference.PreferenceManager
 import android.util.Log
-import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.google.gson.Gson
-import com.system_scan_kt.Utils.Constant
 import com.system_scan_kt.portauthority.Host
 import com.system_scan_kt.portauthority.MainAsyncResponse
 import com.system_scan_kt.portauthority.ScanHostsAsyncTask
 import com.system_scan_kt.portauthority.Wireless
 import com.system_scan_kt.portauthority.Wireless.NoConnectivityManagerException
 import com.system_scan_kt.portauthority.Wireless.NoWifiManagerException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.net.SocketException
 import java.net.UnknownHostException
@@ -41,197 +35,13 @@ import java.util.concurrent.atomic.AtomicInteger
 class NetworkDiscoveryModule(private val reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {
 
-    private val TAG = "NetworkDiscoveryModule"
-//    var mDiscoveryTask: AbstractDiscovery2? = null
-    private var currentNetwork = 0
-    private var network_ip: Long = 0
-    private var network_start: Long = 0
-    private var network_end: Long = 0
-
-//    private var hosts: ArrayList<HostBean> = ArrayList()
-
-    private var prefs: SharedPreferences? = null
-
     private val TIMER_INTERVAL = 1500
-
+    private val DEFAULT_HOST_SOCKET_TIMEOUT = "500"
+    private val VIBRATE = 250L
     private var scanHandler: Handler? = null
     private var mHosts = Collections.synchronizedList(ArrayList<Host>())
+    override fun getName() = "NetworkDiscoveryModule"
 
-    override fun getName() = "NetworkDiscoveryModule";
-
-//    @ReactMethod
-//    fun navigateToNetworkDiscoveryActivity() {
-//        val activity = currentActivity
-//        if (activity != null) {
-//            val intent = Intent(activity, ActivityDiscovery::class.java)
-//            activity.startActivity(intent)
-//        }
-//    }
-
-    /*
-    @ReactMethod
-    fun getNetworkDiscovery(promise: Promise) {
-        hosts.clear()
-        var progressInt = 0
-        CoroutineScope(Dispatchers.Main).launch {
-            currentActivity?.let { mActivity ->
-                val net = NetInfo(mActivity)
-                prefs = PreferenceManager.getDefaultSharedPreferences(mActivity)
-
-                if (currentNetwork != net.hashCode()) {
-                    Log.i(TAG, "Network info has changed")
-                    currentNetwork = net.hashCode()
-
-                    // Cancel running tasks
-                    if (mDiscoveryTask != null) {
-                        mDiscoveryTask!!.cancel(true)
-                        mDiscoveryTask = null
-                    }
-                }
-
-                // Get ip information
-                network_ip = NetInfo.getUnsignedLongFromIp(net.ip)
-                if (prefs?.getBoolean(Constant.KEY_IP_CUSTOM, Constant.DEFAULT_IP_CUSTOM) == true) {
-                    // Custom IP
-                    network_start = NetInfo.getUnsignedLongFromIp(
-                        prefs?.getString(
-                            Constant.KEY_IP_START,
-                            Constant.DEFAULT_IP_START
-                        )
-                    )
-                    network_end = NetInfo.getUnsignedLongFromIp(
-                        prefs?.getString(
-                            Constant.KEY_IP_END,
-                            Constant.DEFAULT_IP_END
-                        )
-                    )
-                } else {
-                    // Custom CIDR
-                    if (prefs?.getBoolean(
-                            Constant.KEY_CIDR_CUSTOM,
-                            Constant.DEFAULT_CIDR_CUSTOM
-                        ) == true
-                    ) {
-                        net.cidr =
-                            prefs?.getString(Constant.KEY_CIDR, Constant.DEFAULT_CIDR)?.toInt()!!
-                    }
-                    // Detected IP
-                    val shift: Int = 32 - net.cidr
-                    if (net.cidr < 31) {
-                        network_start = (network_ip shr shift shl shift) + 1
-                        network_end = (network_start or ((1 shl shift) - 1).toLong()) - 1
-                    } else {
-                        network_start = network_ip shr shift shl shift
-                        network_end = network_start or ((1 shl shift) - 1).toLong()
-                    }
-                }
-
-
-                mDiscoveryTask =
-                    DefaultDiscovery2(
-                        mActivity,
-                        object :
-                            DefaultDiscovery2.Progress {
-                            override fun onHostBeanUpdate(bean: HostBean?) {
-                                bean?.let {
-                                    Log.e(TAG, it.toString())
-                                    hosts.add(it)
-                                    reactContext
-                                        .getJSModule(
-                                            DeviceEventManagerModule.RCTDeviceEventEmitter::class.java
-                                        )
-                                        .emit("onHostBeanUpdate", Gson().toJson(it))
-//                            val networkDiscoveryData =
-//                                NetworkDiscoveryData(hosts, progressInt, false)
-//                            try {
-//                                promise.resolve(Gson().toJson(networkDiscoveryData))
-//                            } catch (e: Throwable) {
-//                                promise.reject("Error: onHostBeanUpdate", e)
-//                            }
-                                }
-                            }
-
-                            @SuppressLint("LongLogTag")
-                            override fun onProgressUpdate(progress: Int?) {
-                                progress?.let {
-//                            Log.e("$TAG Pro", it.toString())
-                                    progressInt = it
-                                    val jsonObject = JSONObject()
-                                    jsonObject.put("progress", (it / 100).toInt())
-                                    reactContext
-                                        .getJSModule(
-                                            DeviceEventManagerModule.RCTDeviceEventEmitter::class.java
-                                        )
-                                        .emit("onProgressUpdate", jsonObject.toString())
-                                    val networkDiscoveryData = NetworkDiscoveryData(
-                                        hosts = hosts,
-                                        progressInt = progressInt,
-                                        isCompleted = false
-                                    )
-//                            try {
-//                                promise.resolve(Gson().toJson(networkDiscoveryData))
-//                            } catch (e: Throwable) {
-//                                promise.reject("Error: onProgressUpdate", e)
-//                            }
-                                }
-                            }
-
-                            override fun onCancel() {
-                                Log.e(TAG, "onCancel")
-                                val jsonObject = JSONObject()
-                                jsonObject.put("isCancel", true)
-                                reactContext
-                                    .getJSModule(
-                                        DeviceEventManagerModule.RCTDeviceEventEmitter::class.java
-                                    )
-                                    .emit("onCancel", jsonObject.toString())
-//                        try {
-//                            promise.resolve("On Cancel Success !")
-//                        } catch (e: Throwable) {
-//                            promise.reject("Error: onProgressUpdate", e)
-//                        }
-                            }
-
-                            @SuppressLint("StaticFieldLeak")
-                            override fun onPostExecute() {
-                                Log.e(TAG, "onPostExecute")
-                                val networkDiscoveryData = NetworkDiscoveryData(
-                                    hosts = hosts,
-                                    progressInt = progressInt,
-                                    isCompleted = true
-                                )
-//                                try {
-//                                    promise.resolve(Gson().toJson(networkDiscoveryData))
-//                                } catch (e: Throwable) {
-//                                    promise.reject("Error: onPostExecute", e)
-//                                }
-                                reactContext
-                                    .getJSModule(
-                                        DeviceEventManagerModule.RCTDeviceEventEmitter::class.java
-                                    )
-                                    .emit("onExecuteComplete", Gson().toJson(networkDiscoveryData))
-                            }
-
-                        })
-                mDiscoveryTask?.setNetwork(network_ip, network_start, network_end)
-//                mDiscoveryTask?.progress =
-                mDiscoveryTask?.execute()
-            }
-        }
-    }
-
-    @ReactMethod
-    fun cancelNetworkDiscovery() {
-        mDiscoveryTask?.cancel(true)
-        mDiscoveryTask = null
-    }
-
-    private data class NetworkDiscoveryData(
-        var hosts: ArrayList<HostBean>,
-        var progressInt: Int,
-        var isCompleted: Boolean
-    )
-*/
     @SuppressLint("LongLogTag")
     @ReactMethod
     fun getNetworkDiscovery2() {
@@ -293,7 +103,7 @@ class NetworkDiscoveryModule(private val reactContext: ReactApplicationContext) 
         Log.e("numSubnetHosts", numSubnetHosts.toString())
 
         try {
-            var progressInt = 0;
+            var progressInt = 0
             val ip = wifi.getInternalWifiIpAddress(wifi.type)
             ScanHostsAsyncTask(currentActivity?.applicationContext, object : MainAsyncResponse {
 
@@ -370,7 +180,7 @@ class NetworkDiscoveryModule(private val reactContext: ReactApplicationContext) 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             vibrator.vibrate(
                                 VibrationEffect.createOneShot(
-                                    Constant.VIBRATE,
+                                    VIBRATE,
                                     VibrationEffect.DEFAULT_AMPLITUDE
                                 )
                             )
@@ -394,7 +204,7 @@ class NetworkDiscoveryModule(private val reactContext: ReactApplicationContext) 
                 AsyncTask.THREAD_POOL_EXECUTOR,
                 ip,
                 wifi.internalWifiSubnet,
-                Constant.DEFAULT_HOST_SOCKET_TIMEOUT.toInt()
+                DEFAULT_HOST_SOCKET_TIMEOUT.toInt()
             )
         } catch (e: UnknownHostException) {
             Log.e(

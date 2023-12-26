@@ -6,12 +6,8 @@ import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.util.Pair;
-
 import androidx.annotation.NonNull;
-
 import com.system_scan_kt.R;
-import com.system_scan_kt.Utils.Constant;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -32,6 +28,7 @@ public class ScanHostsAsyncTask extends AsyncTask<Integer, Void, Void> {
     private final WeakReference<MainAsyncResponse> delegate;
     private static final String NEIGHBOR_INCOMPLETE = "INCOMPLETE";
     private static final String NEIGHBOR_FAILED = "FAILED";
+    public static final String DEFAULT_LAN_SOCKET_TIMEOUT = "500";
 
     static {
         System.loadLibrary("ipneigh");
@@ -207,11 +204,11 @@ public class ScanHostsAsyncTask extends AsyncTask<Integer, Void, Void> {
                 // BUG: Some devices don't respond to mDNS if NetBIOS is queried first. Why?
                 // So let's query mDNS first, to keep in mind for eventual UPnP implementation.
                 try {
-                    if (resolve(ip, host, activity1, numHosts, new MDNSResolver(Integer.parseInt(Constant.DEFAULT_LAN_SOCKET_TIMEOUT)))) {
+                    if (resolve(ip, host, activity1, numHosts, new MDNSResolver(Integer.parseInt(DEFAULT_LAN_SOCKET_TIMEOUT)))) {
                         return;
                     }
 
-                    resolve(ip, host, activity1, numHosts, new NetBIOSResolver(Integer.parseInt(Constant.DEFAULT_LAN_SOCKET_TIMEOUT)));
+                    resolve(ip, host, activity1, numHosts, new NetBIOSResolver(Integer.parseInt(DEFAULT_LAN_SOCKET_TIMEOUT)));
                 } catch (Exception ignored) {
                 } finally {
                     if (activity1 != null) {

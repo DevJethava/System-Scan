@@ -22,14 +22,11 @@ const {NetworkDiscoveryModule} = NativeModules;
 function App() {
   const [isShowIndicator, setIsShowIndicator] = useState(false);
   const [hostList, setHostList] = useState([]);
-  const [progress, setProgress] = useState(-1);
-  const [buttonClick, setButtonClick] = useState(1);
 
   const onNetworkDiscovery2 = async () => {
     try {
-      setButtonClick(2);
       setIsShowIndicator(true);
-      setHostList([]);
+      // setHostList([]);
       await NetworkDiscoveryModule.getNetworkDiscovery2();
     } catch (e) {
       console.error(e, 'start');
@@ -41,11 +38,6 @@ function App() {
       if (res.isFinished) {
         setIsShowIndicator(false);
       }
-      // if (res.progressCount < res.progressTill) {
-      //     setIsShowIndicator(true)
-      // } else {
-      //     setIsShowIndicator(false)
-      // }
     } catch (e) {
       console.log(e);
     }
@@ -110,10 +102,8 @@ function App() {
   };
 
   const onNetworkHostUpdateCall = event => {
-    console.log('onNetworkHostUpdateCall => ', event);
     let res = JSON.parse(event);
     if (!hostList.includes(event)) {
-      console.log('added');
       setHostList(preList => [...preList, res]);
     }
   };
@@ -128,22 +118,11 @@ function App() {
           borderColor: '#000000',
           borderWidth: 1,
           margin: 8,
+          borderRadius: 8,
         }}>
-        {buttonClick === 1 && (
-          <>
-            <Text>IP Address: {item.ipAddress}</Text>
-            <Text>MAC Address: {item.hardwareAddress}</Text>
-            <Text>Vendor: {item.nicVendor}</Text>
-            <Text>os: {item.os}</Text>
-          </>
-        )}
-        {buttonClick === 2 && (
-          <>
-            <Text>Host Name: {item.hostname}</Text>
-            <Text>IP Address: {item.ip}</Text>
-            <Text>MAC Address: {item.mac}</Text>
-          </>
-        )}
+        <Text>Host Name: {item.hostname}</Text>
+        <Text>IP Address: {item.ip}</Text>
+        <Text>MAC Address: {item.mac}</Text>
       </View>
     </TouchableOpacity>
   );
