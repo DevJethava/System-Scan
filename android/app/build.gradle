@@ -102,6 +102,12 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    externalNativeBuild {
+        ndkBuild {
+            path file('src/main/c/Android.mk')
+        }
+    }
+    ndkVersion "21.4.7075529"
 }
 
 dependencies {
@@ -114,6 +120,8 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("cz.msebera.android:httpclient:4.5.8")
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
