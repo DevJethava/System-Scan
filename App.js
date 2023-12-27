@@ -127,7 +127,7 @@ function App() {
         console.error(e, 'start');
       }
     } else {
-      Alert.alert('Please connect to wifi');
+      Alert.alert('You have not connected to wifi');
     }
   };
 
