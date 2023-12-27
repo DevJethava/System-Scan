@@ -16,33 +16,40 @@ import {
   FlatList,
   TouchableOpacity,
   NativeModules,
+  Alert,
 } from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
 const {NetworkDiscoveryModule} = NativeModules;
 
 function App() {
+  const [networkData, setNetWorkData] = useState('');
   const [isShowIndicator, setIsShowIndicator] = useState(false);
   const [hostList, setHostList] = useState([]);
   const [sortData, setSortData] = useState([]);
+  const [deviceWifiData, setDevicewifiData] = useState({
+    hostname: null,
+    ip: null,
+    mac: null,
+  });
 
-  const onNetworkDiscovery2 = async () => {
-    try {
-      setIsShowIndicator(true);
-      setHostList([]);
-      await NetworkDiscoveryModule.getNetworkDiscovery2();
-    } catch (e) {
-      console.error(e, 'start');
-    }
-  };
-  const onNetworkProgressCall = async event => {
-    try {
-      let res = JSON.parse(event);
-      if (res.isFinished) {
-        setIsShowIndicator(false);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  useEffect(() => {
+    const unSubscribe = NetInfo.addEventListener(dat => {
+      setNetWorkData(dat);
+      setDevicewifiData({
+        hostname: dat.details.ipAddress,
+        ip: dat.details.ipAddress,
+        mac: dat.details.bssid,
+      });
+    });
+
+    return () => {
+      unSubscribe && unSubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    setSortData(hostList.sort(compareIPAddresses));
+  }, [hostList]);
 
   useEffect(() => {
     // const eventEmitter = new DeviceEventEmitter();
@@ -109,9 +116,31 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    setSortData(hostList.sort(compareIPAddresses));
-  }, [hostList]);
+  const onNetworkDiscovery2 = async () => {
+    if (networkData?.type == 'wifi') {
+      try {
+        setIsShowIndicator(true);
+        setHostList([]);
+        setHostList(preList => [...preList, deviceWifiData]);
+        await NetworkDiscoveryModule.getNetworkDiscovery2();
+      } catch (e) {
+        console.error(e, 'start');
+      }
+    } else {
+      Alert.alert('Please connect to wifi');
+    }
+  };
+
+  const onNetworkProgressCall = async event => {
+    try {
+      let res = JSON.parse(event);
+      if (res.isFinished) {
+        setIsShowIndicator(false);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   function compareIPAddresses(a, b) {
     const numA = Number(
