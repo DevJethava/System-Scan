@@ -136,6 +136,7 @@ class NetworkDiscoveryModule(private val reactContext: ReactApplicationContext) 
                  */
                 override fun processFinish(progress: Int) {
                     progressInt += progress
+                    //
                     Log.e("Progress => ", progressInt.toString())
                     val jsonObject = JSONObject()
                     jsonObject.put("progressCount", progressInt)

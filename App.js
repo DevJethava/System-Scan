@@ -157,22 +157,22 @@ function App() {
         onPress={onNetworkDiscovery2}
       />
 
-      <View
-        style={{
-          marginTop: 32,
-          margin: 16,
-          justifyContent: 'space-evenly',
-          flexDirection: 'row',
-        }}></View>
-      {isShowIndicator && <ActivityIndicator size="large" />}
-
-      <View>
-        <FlatList
-          data={sortData}
-          renderItem={({item, index}) => <Item item={item} pos={index} />}
-          keyExtractor={(item, pos) => pos.toString()}
+      {isShowIndicator ? (
+        <ActivityIndicator
+          size="large"
+          style={{
+            marginTop: 30,
+          }}
         />
-      </View>
+      ) : (
+        <View style={{flex: 1, marginTop: 10}}>
+          <FlatList
+            data={sortData}
+            renderItem={({item, index}) => <Item item={item} pos={index} />}
+            keyExtractor={(item, pos) => pos.toString()}
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 }
