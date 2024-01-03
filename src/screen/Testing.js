@@ -19,8 +19,8 @@ import {
   Alert,
 } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
-const {NetworkDiscoveryModule} = NativeModules;
 
+const {NetworkDiscoveryModule} = NativeModules;
 function App() {
   const [networkData, setNetWorkData] = useState('');
   const [isShowIndicator, setIsShowIndicator] = useState(false);
@@ -84,6 +84,8 @@ function App() {
       onNetworkProgress.remove();
     };
   }, []);
+
+  const SpeedTest = async () => {};
 
   const onHostBeanUpdateCall = event => {
     console.log('onHostBeanUpdateCall => ', event);
@@ -202,6 +204,7 @@ function App() {
           />
         </View>
       )}
+      <Button title={start ? 'Stop' : 'Start'} onPress={SpeedTest} />
     </SafeAreaView>
   );
 }

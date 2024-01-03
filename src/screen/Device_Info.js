@@ -87,7 +87,9 @@ export const Device_Info = () => {
       await DeviceInfo.getDeviceName().then(data => setDeviceName(data));
       await DeviceInfo.getInstanceId().then(data => setInstanceId(data));
       await DeviceInfo.getIpAddress().then(data => setIpAddress(data));
-      await DeviceInfo.getMacAddress().then(data => setMacAddress(data));
+      await DeviceInfo.getMacAddress().then(data => {
+        data != '' ? setMacAddress(data) : setMacAddress('No Mac Found');
+      });
       await DeviceInfo.getApiLevel().then(data => setApiLevel(data));
       await DeviceInfo.isLandscape().then(data => setisLandscape(data));
       await DeviceInfo.isAirplaneMode().then(data => setisAirplaneMode(data));

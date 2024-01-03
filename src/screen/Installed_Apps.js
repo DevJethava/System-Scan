@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Text, View } from 'react-native';
-import { InstalledApps } from 'react-native-launcher-kit';
-import { Reduce_AppData } from '../common/Reduce_AppData';
+import React, {useEffect, useState} from 'react';
+import {ActivityIndicator, FlatList, Text, View} from 'react-native';
+import {InstalledApps} from 'react-native-launcher-kit';
+import {Reduce_AppData} from '../common/Reduce_AppData';
 
 export const Installed_Apps = () => {
   const [result, setResult] = useState(null);
@@ -11,7 +11,7 @@ export const Installed_Apps = () => {
 
   return (
     <View
-      style={{ flex: 1, paddingHorizontal: 10, backgroundColor: '#e0e0e050' }}>
+      style={{flex: 1, paddingHorizontal: 10, backgroundColor: '#e0e0e050'}}>
       <Text
         style={{
           fontSize: 20,

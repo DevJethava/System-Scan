@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import NetInfo from '@react-native-community/netinfo';
+import DeviceInfo from 'react-native-device-info';
 const {NetworkDiscoveryModule} = NativeModules;
 
 export const Scan_IP_Connected = () => {
@@ -29,7 +30,11 @@ export const Scan_IP_Connected = () => {
     const unSubscribe = NetInfo.addEventListener(dat => {
       setNetWorkData(dat);
       setDevicewifiData({
-        hostname: dat.details.ipAddress,
+        ...deviceWifiData,
+        hostname:
+          deviceWifiData.hostname == null
+            ? dat.details.ipAddress
+            : deviceWifiData.hostname,
         ip: dat.details.ipAddress,
         mac: dat.details.bssid,
       });
@@ -110,6 +115,9 @@ export const Scan_IP_Connected = () => {
   };
 
   const onNetworkDiscovery2 = async () => {
+    await DeviceInfo.getProduct().then(data => {
+      setDevicewifiData({...deviceWifiData, hostname: data});
+    });
     if (networkData?.type == 'wifi') {
       try {
         setScan(true);
@@ -202,10 +210,10 @@ export const Scan_IP_Connected = () => {
             borderRadius: 10,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: '#74e470ad',
+            backgroundColor: scan ? '#8eee8b79' : '#74e470ad',
           }}
           disabled={scan}>
-          <Text style={{fontSize: 16, fontWeight: '600', color: '#bb9b1bff'}}>
+          <Text style={{fontSize: 16, fontWeight: '600', color: '#b1900e'}}>
             {hostList == '' ? 'Scan' : 'Re Scan'}
           </Text>
         </TouchableOpacity>
@@ -217,9 +225,9 @@ export const Scan_IP_Connected = () => {
             borderRadius: 10,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: '#74e470ad',
+            backgroundColor: '#8eee8b79',
           }}>
-          <Text style={{fontSize: 16, fontWeight: '600', color: '#bb9b1bff'}}>
+          <Text style={{fontSize: 16, fontWeight: '600', color: '#b1900e'}}>
             Total IP : {hostList.length}
           </Text>
         </View>
