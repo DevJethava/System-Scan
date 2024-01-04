@@ -17,6 +17,7 @@ export const Routs = () => {
   function Home() {
     return (
       <Tab.Navigator
+        initialRouteName="Testing"
         screenOptions={({route}) => ({
           tabBarIcon: ({focused}) => {
             let iconname;

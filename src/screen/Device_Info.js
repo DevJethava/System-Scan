@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {Platform, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import axios from 'axios';
 import DeviceInfo from 'react-native-device-info';
 
 export const Device_Info = () => {
@@ -37,9 +38,11 @@ export const Device_Info = () => {
   const [getTotalMemory, setgetTotalMemory] = useState(null);
   const [getTotalDiskCapacity, setgetTotalDiskCapacity] = useState(null);
   const [getFreeDiskStorage, setgetFreeDiskStorage] = useState(null);
+  const [networkData, setNetWorkData] = useState('');
 
   useEffect(() => {
     getDataAsync();
+    SpeedTest();
   }, []);
 
   const getDataAsync = async () => {
@@ -107,6 +110,25 @@ export const Device_Info = () => {
     } catch (e) {
       console.error('Trouble getting device info ', e);
     }
+  };
+
+  const SpeedTest = async () => {
+    axios
+      .get(
+        // 'https://ipapi.co/json/',
+        'https://ipinfo.io/',
+        // 'https://ip.guide/',
+      )
+      .then(data => {
+        console.log(JSON.stringify(data.data, '', 2));
+        setNetWorkData(data.data);
+      })
+      .catch(error => {
+        console.log(error, 'erorr Device');
+        setTimeout(() => {
+          SpeedTest();
+        }, 2000);
+      });
   };
 
   return (
@@ -201,6 +223,18 @@ export const Device_Info = () => {
           <Text style={styles.text}>Incremental :- {Incremental}</Text>
           <Text style={styles.text}>InstanceId :- {InstanceId}</Text>
         </View>
+
+        {networkData != '' ? (
+          <View style={styles.container}>
+            <Text style={styles.mianHeader}>Network Details</Text>
+            <Text style={styles.text}>Local Ip : {networkData.ip}</Text>
+            <Text style={styles.text}>Provider : {networkData.org}</Text>
+            <Text style={styles.text}>
+              Location : {networkData.city}, {networkData.region},{' '}
+              {networkData.country_name}.
+            </Text>
+          </View>
+        ) : null}
       </ScrollView>
     </View>
   );
