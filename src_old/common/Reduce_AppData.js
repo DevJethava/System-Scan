@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import {Image, Text, View} from 'react-native';
 
 export const Reduce_AppData = props => {
   const DATA = props.item;
@@ -15,7 +15,7 @@ export const Reduce_AppData = props => {
         backgroundColor: '#d0f3eb6c',
         paddingLeft: 20,
       }}>
-      <View style={{ flexDirection: 'row', marginTop: 2 }}>
+      <View style={{flexDirection: 'row', marginTop: 2}}>
         <Text
           style={{
             fontSize: 14,
@@ -25,12 +25,22 @@ export const Reduce_AppData = props => {
           }}>
           {DATA.index + 1}.
         </Text>
-        <Text style={{ fontSize: 14, color: '#05b5be', fontSize: 16 }}>
-          {DATA.item.label}
-        </Text>
+        <Image
+          source={{uri: `data:image/png;base64,${DATA.item.icon}`}}
+          style={{
+            height: 50,
+            width: 50,
+            borderWidth: 2,
+            borderColor: 'green',
+            borderRadius: 50,
+          }}
+        />
       </View>
-      <Text
-        style={{ fontSize: 14, color: 'black', marginTop: 2, fontSize: 14 }}>
+      <Text style={{fontSize: 14, color: '#05b5be', fontSize: 16}}>
+        {DATA.item.label}
+      </Text>
+
+      <Text style={{fontSize: 14, color: 'black', marginTop: 2, fontSize: 14}}>
         {DATA.item.packageName}
       </Text>
     </View>

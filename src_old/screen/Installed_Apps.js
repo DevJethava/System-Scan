@@ -1,13 +1,23 @@
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, FlatList, Text, View} from 'react-native';
-import {InstalledApps} from 'react-native-launcher-kit';
+import {InstalledApps, RNLauncherKitHelper} from 'react-native-launcher-kit';
 import {Reduce_AppData} from '../common/Reduce_AppData';
 
 export const Installed_Apps = () => {
   const [result, setResult] = useState(null);
+  const [b, setb] = useState(null);
+
   useEffect(() => {
     setResult(InstalledApps.getSortedApps());
+    console.log(JSON.stringify(result, '', 2));
+    Battery();
   }, []);
+
+  const Battery = async () => {
+    const result = await RNLauncherKitHelper.getBatteryStatus();
+    console.log(result, 'battery');
+    setb(result);
+  };
 
   return (
     <View

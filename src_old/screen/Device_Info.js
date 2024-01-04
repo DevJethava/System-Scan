@@ -120,7 +120,7 @@ export const Device_Info = () => {
         // 'https://ip.guide/',
       )
       .then(data => {
-        console.log(JSON.stringify(data.data, '', 2));
+        // console.log(JSON.stringify(data.data, '', 2));
         setNetWorkData(data.data);
       })
       .catch(error => {
@@ -227,11 +227,11 @@ export const Device_Info = () => {
         {networkData != '' ? (
           <View style={styles.container}>
             <Text style={styles.mianHeader}>Network Details</Text>
-            <Text style={styles.text}>Local Ip : {networkData.ip}</Text>
+            <Text style={styles.text}>Network IP : {networkData.ip}</Text>
             <Text style={styles.text}>Provider : {networkData.org}</Text>
             <Text style={styles.text}>
               Location : {networkData.city}, {networkData.region},{' '}
-              {networkData.country_name}.
+              {networkData.country_name || networkData.country} .
             </Text>
           </View>
         ) : null}

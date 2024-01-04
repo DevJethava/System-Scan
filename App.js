@@ -1,11 +1,13 @@
 import React from 'react';
-import {SafeAreaView, ScrollView} from 'react-native';
-import {Routs} from './src/routs/Routs';
+import {SafeAreaView, Text} from 'react-native';
+import Routs_old from './src_old/routes/Routs';
+import Routes from './src/routes/Routes';
 
 function App() {
   return (
     <SafeAreaView style={{flex: 1}}>
-      <Routs />
+      {/* <Routs_old /> */}
+      <Routes />
     </SafeAreaView>
   );
 }

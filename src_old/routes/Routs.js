@@ -10,7 +10,7 @@ import {Scan_IP_Connected} from '../screen/Scan_IP_Connected';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IP_Port_Scan from '../common/IP_Port_Scan';
 
-export const Routs = () => {
+export default Routs = () => {
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
 

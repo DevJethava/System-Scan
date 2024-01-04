@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {Button, SafeAreaView, Text, View} from 'react-native';
 
-function App() {
+function Testing() {
   const [networkData, setNetWorkData] = useState('');
 
   useEffect(() => {
@@ -50,4 +50,4 @@ function App() {
   );
 }
 
-export default App;
+export default Testing;
