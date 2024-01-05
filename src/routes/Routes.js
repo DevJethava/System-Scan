@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useState} from 'react';
+import {Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
@@ -6,10 +7,11 @@ import DeviceScreen from '../screen/DeviceScreen';
 import AppScreen from '../screen/AppScreen.js';
 import SystemScreen from '../screen/SystemScreen';
 import DashBoardScreen from '../screen/DashBoardScreen';
-import {Device_Info} from '../screen/Device_Info';
 import BatteryScreen from '../screen/BatteryScreen.js';
 import NetworkScreen from '../screen/NetworkScreen.js';
-import {Text} from 'react-native';
+import {Device_Info} from '../screen/Device_Info';
+import StorageScreen from '../screen/StorageScreen.js';
+import {ScanIPConnected} from '../screen/ScanIPConnectedScreen.js';
 
 export default function Routes() {
   const Stack = createNativeStackNavigator();
@@ -47,10 +49,12 @@ export default function Routes() {
           },
         })}
         sceneContainerStyle={{backgroundColor: '#ffffe060'}}>
+        <Tab.Screen name="ScanIP" component={ScanIPConnected} />
         <Tab.Screen name="DashBoard" component={DashBoardScreen} />
         <Tab.Screen name="Device" component={DeviceScreen} />
         <Tab.Screen name="System" component={SystemScreen} />
         <Tab.Screen name="Battery" component={BatteryScreen} />
+        <Tab.Screen name="Storage" component={StorageScreen} />
         <Tab.Screen name="NetWork" component={NetworkScreen} />
         <Tab.Screen name="Apps" component={AppScreen} />
         <Tab.Screen name="Test" component={Device_Info} />

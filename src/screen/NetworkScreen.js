@@ -4,7 +4,7 @@ import NetInfo from '@react-native-community/netinfo';
 import TextView from '../common/TextView';
 import axios from 'axios';
 
-export default function NetworkScreen() {
+export default function NetworkScreen({}) {
   const [networkData, setNetWorkData] = useState('');
   const [onlineData, serOnlineData] = useState('');
 
@@ -34,7 +34,6 @@ export default function NetworkScreen() {
         console.log(error, 'erorr Device');
       });
   };
-  console.log(JSON.stringify(onlineData, '', 2));
 
   const LiveData = () => {
     return onlineData != '' ? (
