@@ -8,6 +8,7 @@ import {
   View,
   Alert,
   StyleSheet,
+  PermissionsAndroid,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import NetInfo from '@react-native-community/netinfo';
@@ -25,6 +26,59 @@ export const ScanIPConnected = () => {
     ip: null,
     mac: null,
   });
+
+  useEffect(() => {
+    Peermisson1();
+    Peermisson2();
+  }, []);
+
+  const Peermisson1 = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        {
+          title: 'Cool Photo App read Permission',
+          message:
+            'Cool Photo App needs access to your camera ' +
+            'so you can take awesome pictures.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the camera 11');
+      } else {
+        console.log('Camera permission denied 11');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  const Peermisson2 = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Cool Photo App write Permission',
+          message:
+            'Cool Photo App needs access to your camera ' +
+            'so you can take awesome pictures.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the camera 22');
+      } else {
+        console.log('Camera permission denied 22');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
 
   useEffect(() => {
     const unSubscribe = NetInfo.addEventListener(dat => {
@@ -162,12 +216,12 @@ export const ScanIPConnected = () => {
   const Item = ({item, pos}) => (
     <TouchableOpacity
       activeOpacity={0.5}
-      // onPress={() =>
-      //   navigation.navigate('IP_Port_Scan', {
-      //     IP: [item.ip],
-      //   })
-      // }
-    >
+      onPress={() =>
+        // navigation.navigate('IP_Port_Scan', {
+        //   IP: [item.ip],
+        // })
+        console.log('presa')
+      }>
       <View style={styles.container}>
         <Text style={styles.text}>
           <Text style={styles.mianHeader}>Host Name {'      '}: </Text>

@@ -4,7 +4,7 @@ import React from 'react';
 export default function DashBoardScreen() {
   return (
     <View>
-      <Text>DashBoardScreen</Text>
+      <Text style={{color: 'blue'}}>DashBoardScreen</Text>
     </View>
   );
 }

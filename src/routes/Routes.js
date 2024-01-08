@@ -12,6 +12,7 @@ import NetworkScreen from '../screen/NetworkScreen.js';
 import {Device_Info} from '../screen/Device_Info';
 import StorageScreen from '../screen/StorageScreen.js';
 import {ScanIPConnected} from '../screen/ScanIPConnectedScreen.js';
+import TestScreen from '../screen/TestScreen.js';
 
 export default function Routes() {
   const Stack = createNativeStackNavigator();
@@ -57,7 +58,7 @@ export default function Routes() {
         <Tab.Screen name="Storage" component={StorageScreen} />
         <Tab.Screen name="NetWork" component={NetworkScreen} />
         <Tab.Screen name="Apps" component={AppScreen} />
-        <Tab.Screen name="Test" component={Device_Info} />
+        <Tab.Screen name="Test" component={TestScreen} />
       </Tab.Navigator>
     );
   };

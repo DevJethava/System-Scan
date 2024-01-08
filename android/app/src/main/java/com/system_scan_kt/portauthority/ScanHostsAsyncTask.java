@@ -6,8 +6,11 @@ import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.util.Pair;
+
 import androidx.annotation.NonNull;
+
 import com.system_scan_kt.R;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -123,12 +126,19 @@ public class ScanHostsAsyncTask extends AsyncTask<Integer, Void, Void> {
         ParcelFileDescriptor writeSidePfd = pipe[1];
         ParcelFileDescriptor.AutoCloseInputStream inputStream = new ParcelFileDescriptor.AutoCloseInputStream(readSidePfd);
         int fd_write = writeSidePfd.detachFd();
-        int returnCode = nativeIPNeigh(fd_write);
-        if (returnCode != 0) {
-            reportError(activity, new Exception(ctx.getResources().getString(R.string.errAccessArp)));
-            cleanup(executor, activity, null);
-            return;
+        try {
+            int returnCode = nativeIPNeigh(fd_write);
+            Log.e("WHAT IS FD W", fd_write + "");
+            if (returnCode != 0) {
+                reportError(activity, new Exception(ctx.getResources().getString(R.string.errAccessArp)));
+                cleanup(executor, activity, null);
+                return;
+            }
+        } catch (Exception e) {
+            Log.e("WHAT IS FD W", e.getMessage() + "m");
+            e.printStackTrace();
         }
+
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         while (true) {
