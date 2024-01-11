@@ -32,7 +32,9 @@ export default function AppView(props) {
           flexDirection: 'column',
           marginLeft: 15,
         }}>
-        <Text style={{fontSize: 16, color: 'black'}}>{DATA.item.label}</Text>
+        <Text style={{fontSize: 16, color: 'black'}}>
+          {DATA.item?.label || DATA.item?.appName}
+        </Text>
 
         <Text
           style={{fontSize: 14, color: '#05b5be', marginTop: 2, fontSize: 14}}>

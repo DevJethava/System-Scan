@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -50,13 +50,13 @@ export default function Routes() {
           },
         })}
         sceneContainerStyle={{backgroundColor: '#ffffe060'}}>
-        <Tab.Screen name="ScanIP" component={ScanIPConnected} />
         <Tab.Screen name="DashBoard" component={DashBoardScreen} />
         <Tab.Screen name="Device" component={DeviceScreen} />
         <Tab.Screen name="System" component={SystemScreen} />
         <Tab.Screen name="Battery" component={BatteryScreen} />
         <Tab.Screen name="Storage" component={StorageScreen} />
         <Tab.Screen name="NetWork" component={NetworkScreen} />
+        <Tab.Screen name="ScanIP" component={ScanIPConnected} />
         <Tab.Screen name="Apps" component={AppScreen} />
         <Tab.Screen name="Test" component={TestScreen} />
       </Tab.Navigator>

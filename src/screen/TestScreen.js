@@ -13,9 +13,10 @@ const TestScreen = () => {
   const [open, setOpen] = useState([]);
   const [targetIPs, setTargetIps] = useState();
   const targetPorts = Port;
-  useEffect(() => {
-    checkPortsOnIPs();
-  }, []);
+
+  // useEffect(() => {
+  //   checkPortsOnIPs();
+  // }, []);
 
   useEffect(() => {
     const unSubscribe = NetInfo.addEventListener(dat => {

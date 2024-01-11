@@ -1,8 +1,9 @@
 import {View, Text, FlatList, ActivityIndicator} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {InstalledApps, RNLauncherKitHelper} from 'react-native-launcher-kit';
+import {InstalledApps} from 'react-native-launcher-kit';
 import AppView from '../common/AppView';
 import TouchableView from '../common/TouchableView';
+import RNInstalledApplication from 'react-native-installed-application';
 
 export default function AppScreen() {
   const [userApp, setUserApp] = useState(null);
@@ -15,7 +16,22 @@ export default function AppScreen() {
     const Apps = InstalledApps.getSortedApps();
     setUserApp(Apps);
     setcurrentData(Apps);
-    setSyatemApp(InstalledApps.getApps());
+
+    RNInstalledApplication.getSystemApps()
+      .then(apps => {
+        setSyatemApp(apps);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+    RNInstalledApplication.getApps()
+      .then(apps => {
+        setAllApp(apps);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }, []);
 
   const SetData = data => {
@@ -33,15 +49,6 @@ export default function AppScreen() {
           setcurrentData(allApp);
           setState(data);
           break;
-        case 'undefined':
-          setcurrentData(userApp);
-          setState('User');
-          break;
-        case '':
-          setcurrentData(userApp);
-          setState('User');
-          break;
-
         default:
           setcurrentData(userApp);
           setState('User');
@@ -78,6 +85,7 @@ export default function AppScreen() {
         <FlatList
           data={currentData}
           renderItem={item => <AppView item={item} />}
+          initialNumToRender={50}
         />
       ) : (
         <View
