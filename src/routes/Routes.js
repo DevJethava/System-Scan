@@ -25,7 +25,8 @@ export default function Routes() {
           //use this config
           tabBarScrollEnabled: true,
           tabBarIndicator: () => null,
-
+          lazy: true,
+          optimizationsEnabled: true,
           tabBarItemStyle: {
             width: 'auto',
             alignItems: 'flex-start',

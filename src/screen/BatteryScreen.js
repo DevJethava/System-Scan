@@ -23,7 +23,7 @@ export default function BatteryScreen() {
       }}>
       <TextView
         name="BatteryLevel"
-        value={BatteryLevel.batteryLevel * 100 + '%'}
+        value={(BatteryLevel.batteryLevel * 100).toFixed(0) + ' %'}
       />
       <TextView name="BatteryState" value={BatteryLevel.batteryState} />
       <TextView

@@ -37,19 +37,16 @@ export const ScanIPConnected = () => {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
         {
-          title: 'Cool Photo App read Permission',
-          message:
-            'Cool Photo App needs access to your camera ' +
-            'so you can take awesome pictures.',
+          title: 'Read Storage Permission',
           buttonNeutral: 'Ask Me Later',
           buttonNegative: 'Cancel',
           buttonPositive: 'OK',
         },
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('You can use the camera 11');
+        console.log('You can use the Read Storage');
       } else {
-        console.log('Camera permission denied 11');
+        console.log('Read Storage permission denied');
       }
     } catch (err) {
       console.warn(err);
@@ -61,19 +58,16 @@ export const ScanIPConnected = () => {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
         {
-          title: 'Cool Photo App write Permission',
-          message:
-            'Cool Photo App needs access to your camera ' +
-            'so you can take awesome pictures.',
+          title: 'Write Storage Permission',
           buttonNeutral: 'Ask Me Later',
           buttonNegative: 'Cancel',
           buttonPositive: 'OK',
         },
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('You can use the camera 22');
+        console.log('You can use Write Storage ');
       } else {
-        console.log('Camera permission denied 22');
+        console.log('Write Storage permission denied ');
       }
     } catch (err) {
       console.warn(err);

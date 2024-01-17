@@ -37,10 +37,10 @@ export default function StorageScreen() {
         padding: 10,
         elevation: 4,
       }}>
-      <TextView name="Memory" value={getTotalMemory} />
-      <TextView name="Disk Capacity" value={getTotalDiskCapacity} />
-      <TextView name="Free Disk" value={getFreeDiskStorage} />
-      <TextView name="Old Free Disk" value={getFreeDiskStorageOld} />
+      <TextView name="Memory" value={getTotalMemory + ' GB'} />
+      <TextView name="Disk Capacity" value={getTotalDiskCapacity + ' GB'} />
+      <TextView name="Free Disk" value={getFreeDiskStorage + ' GB'} />
+      <TextView name="Old Free Disk" value={getFreeDiskStorageOld + ' GB'} />
     </View>
   );
 }
