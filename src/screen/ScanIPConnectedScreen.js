@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   DeviceEventEmitter,
   FlatList,
@@ -13,6 +13,8 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import NetInfo from '@react-native-community/netinfo';
 import DeviceInfo from 'react-native-device-info';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import UserContext from '../routes/ContextProvider';
 const {NetworkDiscoveryModule} = NativeModules;
 
 export const ScanIPConnected = () => {
@@ -21,6 +23,7 @@ export const ScanIPConnected = () => {
   const [networkData, setNetWorkData] = useState('');
   const [hostList, setHostList] = useState([]);
   const [sortData, setSortData] = useState([]);
+  const {setCurrentUser} = useContext(UserContext);
   const [deviceWifiData, setDevicewifiData] = useState({
     hostname: null,
     ip: null,
@@ -94,7 +97,16 @@ export const ScanIPConnected = () => {
   }, []);
 
   useEffect(() => {
-    setSortData(hostList.sort(compareIPAddresses));
+    const data = async () => {
+      setSortData(hostList.sort(compareIPAddresses));
+      try {
+        setCurrentUser(hostList.length);
+        await AsyncStorage.setItem('onlineDevices', hostList.length.toString());
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+    data();
   }, [hostList]);
 
   useEffect(() => {
@@ -155,8 +167,9 @@ export const ScanIPConnected = () => {
     console.log(hostList);
   };
 
-  const onNetworkHostUpdateCall = event => {
+  const onNetworkHostUpdateCall = async event => {
     let res = JSON.parse(event);
+
     if (!hostList.includes(event)) {
       setHostList(preList => [...preList, res]);
     }

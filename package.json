@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.6.0",
+    "@react-native-async-storage/async-storage": "^1.21.0",
     "@react-native-community/netinfo": "^11.2.1",
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/material-top-tabs": "^6.6.5",
@@ -23,6 +24,7 @@
     "react-native-gesture-handler": "^2.14.0",
     "react-native-installed-application": "^1.0.6",
     "react-native-launcher-kit": "^1.0.4",
+    "react-native-network-speed": "^1.1.2",
     "react-native-pager-view": "^6.2.3",
     "react-native-permissions": "^4.0.1",
     "react-native-reanimated": "^3.6.1",
