@@ -14,6 +14,7 @@ import StorageScreen from '../screen/StorageScreen.js';
 import {ScanIPConnected} from '../screen/ScanIPConnectedScreen.js';
 import TestScreen from '../screen/TestScreen.js';
 import {ContextProvider} from './ContextProvider.js';
+import PortScanScreen from '../screen/PortScanScreen.js';
 
 export default function Routes() {
   const Stack = createNativeStackNavigator();
@@ -24,7 +25,6 @@ export default function Routes() {
       <ContextProvider>
         <Tab.Navigator
           screenOptions={({route}) => ({
-            //use this config
             tabBarScrollEnabled: true,
             tabBarIndicator: () => null,
             lazy: true,
@@ -60,6 +60,7 @@ export default function Routes() {
           <Tab.Screen name="Storage" component={StorageScreen} />
           <Tab.Screen name="NetWork" component={NetworkScreen} />
           <Tab.Screen name="ScanIP" component={ScanIPConnected} />
+
           <Tab.Screen name="Apps" component={AppScreen} />
           <Tab.Screen name="Test" component={TestScreen} />
         </Tab.Navigator>
@@ -71,6 +72,7 @@ export default function Routes() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name="Top_Tab" component={Top_Tab} />
+        <Stack.Screen name="PortScan" component={PortScanScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

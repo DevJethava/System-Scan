@@ -1,15 +1,23 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import NetWorkSpeed from '../common/NetWorkSpeed';
 import DeviceInfo from 'react-native-device-info';
 import NetInfo from '@react-native-community/netinfo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserContext from '../routes/ContextProvider';
+import {useNavigation} from '@react-navigation/native';
 
 export default function DashBoardScreen() {
   const [DeviceName, setDeviceName] = useState(null);
   const [networkData, setNetWorkData] = useState('');
   const {currentUser, setCurrentUser} = useContext(UserContext);
+  const naviagtion = useNavigation();
 
   useEffect(() => {
     CollectData();
@@ -31,11 +39,11 @@ export default function DashBoardScreen() {
   };
 
   return (
-    <View style={{flex: 1}}>
-      <View style={{marginLeft: 20, marginTop: 5}}>
+    <ScrollView style={{flexGrow: 1}}>
+      <View style={{marginLeft: 20, margin: 15, marginLeft: 20}}>
         <Text style={Styles.text}>
           Hey{' '}
-          <Text style={{fontSize: 22, fontWeight: '600', color: '#899494'}}>
+          <Text style={{fontSize: 24, fontWeight: '600', color: '#2e54a5cd'}}>
             {DeviceName}
           </Text>
         </Text>
@@ -72,10 +80,27 @@ export default function DashBoardScreen() {
               padding: 25,
               elevation: 4,
             }}>
-            <Text style={{fontSize: 20}}>{currentUser} Online Devices</Text>
-            <Text style={{fontSize: 20, marginTop: 10}}>
+            <Text style={{fontSize: 20, fontWeight: '600', color: '#2e54a5cc'}}>
+              {currentUser || 0} Online Devices
+            </Text>
+            <Text style={{fontSize: 20, marginTop: 10, marginLeft: 5}}>
               IP :- {networkData.details.ipAddress}
             </Text>
+          </View>
+          <View style={{margin: 20, marginTop: '10%'}}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#2e54a5cc',
+                borderRadius: 12,
+                padding: 12,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={() => naviagtion.navigate('ScanIP')}>
+              <Text style={{fontSize: 16, color: 'white', fontWeight: '600'}}>
+                See who's connected!
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       ) : (
@@ -110,7 +135,7 @@ export default function DashBoardScreen() {
           </Text>
         </View>
       )}
-    </View>
+    </ScrollView>
   );
 }
 

@@ -99,11 +99,16 @@ export const ScanIPConnected = () => {
   useEffect(() => {
     const data = async () => {
       setSortData(hostList.sort(compareIPAddresses));
-      try {
-        setCurrentUser(hostList.length);
-        await AsyncStorage.setItem('onlineDevices', hostList.length.toString());
-      } catch (error) {
-        console.log('error', error);
+      if (hostList.length > 0) {
+        try {
+          setCurrentUser(hostList.length);
+          await AsyncStorage.setItem(
+            'onlineDevices',
+            hostList.length.toString(),
+          );
+        } catch (error) {
+          console.log('error', error);
+        }
       }
     };
     data();
@@ -220,14 +225,13 @@ export const ScanIPConnected = () => {
     return numA - numB;
   }
 
-  const Item = ({item, pos}) => (
+  const Item = ({item}) => (
     <TouchableOpacity
       activeOpacity={0.5}
       onPress={() =>
-        // navigation.navigate('IP_Port_Scan', {
-        //   IP: [item.ip],
-        // })
-        console.log('presa')
+        navigation.navigate('PortScan', {
+          items: item,
+        })
       }>
       <View style={styles.container}>
         <Text style={styles.text}>
@@ -303,7 +307,7 @@ export const ScanIPConnected = () => {
                 padding: 30,
                 fontSize: 28,
               }}>
-              No Data Found ...
+              No Device Found ...
             </Text>
           </View>
         ) : (
