@@ -314,7 +314,8 @@ void ipneigh_reset_filter(int ifindex) {
     filter.index = ifindex;
 }
 
-static int do_show_or_flush(FILE *mypipe) {
+static int do_show_or_flush(struct rtnl_handle *rth, FILE *mypipe) {
+    // Construct the request
     struct {
         struct nlmsghdr n;
         struct ndmsg ndm;
@@ -323,45 +324,23 @@ static int do_show_or_flush(FILE *mypipe) {
             .n.nlmsg_type = RTM_GETNEIGH,
             .n.nlmsg_len = NLMSG_LENGTH(sizeof(struct ndmsg)),
     };
-    static int preferred_family = AF_UNSPEC;
+
+    // Set up filter options if needed
     ipneigh_reset_filter(0);
-    if (!filter.family)
-        filter.family = preferred_family;
-    filter.state = 0xFF & ~NUD_NOARP;
 
-    // RTM_GETLINK forbidden by Android API 30
-    // ll_init_map(&rth);
-        req.ndm.ndm_family = filter.family;
-        if (rtnl_dump_request_n(&rth, &req.n) < 0) {
-            perror("Cannot send dump request");
-            exit(1);
-        }
-    if (rtnl_dump_filter(&rth, print_neigh, mypipe) < 0) {
+    // Send the request
+    if (rtnl_dump_request_n(rth, &req.n) < 0) {
+        perror("Cannot send dump request");
+        return EXIT_FAILURE;
+    }
+
+    // Process the response
+    if (rtnl_dump_filter(rth, print_neigh, mypipe) < 0) {
         fprintf(stderr, "Dump terminated\n");
-        exit(1);
-    }
-    return 0;
-}
-
-int Java_com_com_system_1scan_1kt_portauthority_ScanHostsAsyncTask_nativeIPNeigh(JNIEnv *env,
-                                                                                 jobject thiz,
-                                                                                 jint fileDescriptor) {
-
-    FILE *mypipe = fdopen(fileDescriptor, "w");
-    if (mypipe == NULL) {
-        perror("Cannot fdopen");
-        exit(EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
 
-    if (rtnl_open(&rth, 0) < 0)
-        exit(1);
-
-    int res = do_show_or_flush(mypipe);
-
-    rtnl_close(&rth);
-    fclose(mypipe);
-
-    return res;
+    return EXIT_SUCCESS;
 }
 
 JNIEXPORT jint JNICALL
@@ -374,11 +353,17 @@ Java_com_system_1scan_1kt_portauthority_ScanHostsAsyncTask_nativeIPNeigh(JNIEnv 
         exit(EXIT_FAILURE);
     }
 
-    if (rtnl_open(&rth, 0) < 0)
-        exit(1);
+    // Initialize rtnl_handle
+    struct rtnl_handle rth = {.fd = -1};
+    if (rtnl_open(&rth, 0) < 0) {
+        fclose(mypipe);
+        return EXIT_FAILURE;
+    }
 
-    int res = do_show_or_flush(mypipe);
+    // Perform the required operation
+    int res = do_show_or_flush(&rth, mypipe);
 
+    // Clean up resources
     rtnl_close(&rth);
     fclose(mypipe);
 
